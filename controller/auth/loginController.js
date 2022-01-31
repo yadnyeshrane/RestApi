@@ -3,7 +3,7 @@ import { User } from "../../models";
 import CustomErrorHandler from "../../services/CustomErrorHandler";
 import bcrypt from 'bcrypt';
 import JwtServices from "../../services/JwtServices";
-
+import { REFRESH_SECRET } from "../../Config";
 
 const loginController={
     async login(req,res,next)
@@ -32,7 +32,9 @@ if(!match)
 }
 //passowrd match generate acces-token
 const access_token=JwtServices.sign({_id:user._id,role:user.role});
-res.json({access_token})
+const refresh_token=JwtServices.sign({_id:user._id,role:user.role},'1y',REFRESH_SECRET);
+
+res.json({access_token,refresh_token})
  }
  catch(err)
  {
